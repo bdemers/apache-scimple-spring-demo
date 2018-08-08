@@ -1,5 +1,6 @@
 /target/
 !.mvn/wrapper/maven-wrapper.jar
+apache-tomee/
 
 ### STS ###
 .apt_generated
