@@ -18,11 +18,9 @@ import javax.inject.Named;
 @SpringBootApplication
 public class SpringInitializer extends SpringBootServletInitializer implements ApplicationContextAware {
 
-    // Need to save the Spring Context to a static var so we can use it in the SpringToCdiBridge below.
-    private static ApplicationContext APPLICATION_CONTEXT = null;
-
     public void setApplicationContext(ApplicationContext applicationContext) {
-        APPLICATION_CONTEXT = applicationContext;
+        // overly simple way to bridge CDI and Spring
+        SpringToCdiBridge.APPLICATION_CONTEXT = applicationContext;
     }
 
     @Override
@@ -67,6 +65,9 @@ public class SpringInitializer extends SpringBootServletInitializer implements A
      */
     @ApplicationScoped
     public static class SpringToCdiBridge {
+
+        // Need to save the Spring Context to a static var so we can use it in the SpringToCdiBridge below.
+        private static ApplicationContext APPLICATION_CONTEXT = null;
 
         @Named
         @Produces

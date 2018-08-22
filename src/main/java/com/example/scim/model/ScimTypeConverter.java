@@ -71,11 +71,14 @@ public final class ScimTypeConverter {
         user.setUserName(person.getUsername());
         user.setActive(true);
 
+        String formatted = person.getLastName() + ", " + person.getFirstName();
         Name name = new Name();
         name.setGivenName(person.getFirstName());
         name.setMiddleName(person.getMiddleName());
         name.setFamilyName(person.getLastName());
+        name.setFormatted(formatted);
         user.setName(name);
+        user.setDisplayName(formatted);
 
         if (person.getEmails() != null) {
             user.setEmails(person.getEmails().stream()

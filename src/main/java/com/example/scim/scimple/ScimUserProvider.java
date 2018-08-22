@@ -78,9 +78,10 @@ public class ScimUserProvider implements Provider<ScimUser> {
       throw new UnableToCreateResourceException(Response.Status.CONFLICT, "User already exists.");
     }
 
-    people.put(user.getUserName(), ScimTypeConverter.fromScim(user));
-    user.setId(user.getUserName());
-    return user;
+    user.setId(resourceId);
+    ExamplePerson person = ScimTypeConverter.fromScim(user);
+    people.put(resourceId, person);
+    return ScimTypeConverter.toScim(person);
   }
 
   @Override

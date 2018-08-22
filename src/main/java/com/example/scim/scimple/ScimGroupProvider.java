@@ -55,8 +55,9 @@ public class ScimGroupProvider implements Provider<ScimGroup> {
       throw new UnableToCreateResourceException(Response.Status.CONFLICT, "User already exists.");
     }
 
-    groups.put(resourceId, ScimTypeConverter.fromScim(group));
     group.setId(resourceId);
+    groups.put(resourceId, ScimTypeConverter.fromScim(group));
+
     return group;
   }
 
