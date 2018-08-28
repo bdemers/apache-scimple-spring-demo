@@ -23,6 +23,7 @@ import com.example.scim.model.ExampleAddress;
 import com.example.scim.model.ExamplePerson;
 import com.example.scim.model.ScimTypeConverter;
 import org.apache.directory.scim.server.exception.UnableToCreateResourceException;
+import org.apache.directory.scim.server.exception.UnableToUpdateResourceException;
 import org.apache.directory.scim.server.provider.Provider;
 import org.apache.directory.scim.server.provider.UpdateRequest;
 import org.apache.directory.scim.spec.protocol.filter.AttributeComparisonExpression;
@@ -33,6 +34,7 @@ import org.apache.directory.scim.spec.protocol.search.Filter;
 import org.apache.directory.scim.spec.protocol.search.PageRequest;
 import org.apache.directory.scim.spec.protocol.search.SortRequest;
 import org.apache.directory.scim.spec.resources.ScimExtension;
+import org.apache.directory.scim.spec.resources.ScimGroup;
 import org.apache.directory.scim.spec.resources.ScimUser;
 
 import javax.ws.rs.ServerErrorException;
@@ -85,9 +87,14 @@ public class ScimUserProvider implements Provider<ScimUser> {
   }
 
   @Override
-  public ScimUser update(UpdateRequest<ScimUser> updateRequest)  {
+  public ScimUser update(UpdateRequest<ScimUser> updateRequest) throws UnableToUpdateResourceException {
     String id = updateRequest.getId();
-    ScimUser user = updateRequest.getResource();
+    ScimUser user = SimplePatchUtil.resourceFromUpdateRequest(updateRequest, ScimUser.class);
+
+    // remove the old object if the id has changed
+    if (!id.equals(updateRequest.getId())) {
+        people.remove(id);
+    }
     people.put(id, ScimTypeConverter.fromScim(user));
     return user;
   }

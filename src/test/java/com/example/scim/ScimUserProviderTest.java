@@ -113,18 +113,19 @@ public class ScimUserProviderTest {
     }
 
     @Test
-    public void testUpdate() throws UnableToCreateResourceException {
+    public void testUpdate() throws Exception {
 
         ScimUserProvider provider = new ScimUserProvider();
 
-        ScimUser group1 = new ScimUser();
-        group1.setUserName("jcoder1");
-        group1 = provider.create(group1);
+        ScimUser user1 = new ScimUser();
+        user1.setUserName("jcoder1");
+        user1 = provider.create(user1);
 
-        group1.setUserName("jcoder2");
+        user1.setUserName("jcoder2");
 
         UpdateRequest<ScimUser> updateRequest = mock(UpdateRequest.class);
-        when(updateRequest.getResource()).thenReturn(group1);
+        when(updateRequest.getId()).thenReturn(user1.getId());
+        when(updateRequest.getResource()).thenReturn(user1);
         ScimUser result = provider.update(updateRequest);
 
         assertThat(result.getUserName(), is("jcoder2"));
