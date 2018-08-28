@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>SCIMple + Spring In-Memory Example</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div id="users" class="col s12">
+            <h5>Users</h5>
+            <div class="divider"></div>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Given Name</th>
+                    <th>Family Name</th>
+                    <th>Active</th>
+                    <th>Emails</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.id}">id</td>
+                    <td th:text="${user.userName}">Username</td>
+                    <td th:text="${user.name.givenName}">First Name</td>
+                    <td th:text="${user.name.familyName}">Last Name</td>
+                    <td><span th:class="${user.active} ? 'glyphicon glyphicon-ok' : 'glyphicon glyphicon-remove'"></span></td>
+                    <td>
+                        <ul style="list-style-type:none" th:each="email : ${user.emails}">
+                            <li th:text="${email.value}">Email</li>
+                        </ul>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="groups" class="col s12">
+            <h5>Groups</h5>
+            <div class="divider"></div>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Members</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr th:each="group : ${groups}">
+                    <td th:text="${group.id}">id</td>
+                    <td th:text="${group.displayName}">Name</td>
+                    <td>
+                       <ul style="list-style-type:none" th:each="member : ${group.members}">
+                           <li th:text="${member.value}">Member</li>
+                       </ul>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</body>
+</html>
