@@ -24,4 +24,6 @@ public class ExamplePerson {
 
     private List<ExampleAddress> addresses;
 
+    private boolean active = true;
+
 }

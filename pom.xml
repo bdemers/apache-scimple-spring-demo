@@ -204,6 +204,9 @@
                 <version>1.6.0</version>
                 <configuration>
                     <mainClass>${mainClass}</mainClass>
+                    <arguments>
+                        <argument>--single-classloader</argument>
+                    </arguments>
                 </configuration>
             </plugin>
             <plugin>
