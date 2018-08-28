@@ -3,11 +3,16 @@ package com.example.scim;
 import com.example.scim.scimple.ScimUserProvider;
 import org.apache.directory.scim.server.exception.UnableToCreateResourceException;
 import org.apache.directory.scim.server.provider.UpdateRequest;
+import org.apache.directory.scim.spec.protocol.data.PatchOperation;
 import org.apache.directory.scim.spec.protocol.filter.FilterParseException;
 import org.apache.directory.scim.spec.protocol.filter.FilterResponse;
 import org.apache.directory.scim.spec.protocol.search.Filter;
 import org.apache.directory.scim.spec.resources.ScimUser;
 import org.testng.annotations.Test;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
@@ -45,6 +50,7 @@ public class ScimUserProviderTest {
 
         ScimUser result = provider.get(createResult.getId());
         assertThat(result, equalTo(createResult));
+        assertThat(result.getActive(), is(true));
     }
 
     @Test
@@ -129,5 +135,31 @@ public class ScimUserProviderTest {
         ScimUser result = provider.update(updateRequest);
 
         assertThat(result.getUserName(), is("jcoder2"));
+    }
+
+    @Test
+    public void testUpdateWithPatch() throws Exception {
+
+        ScimUserProvider provider = new ScimUserProvider();
+
+        ScimUser user1 = new ScimUser();
+        user1.setUserName("jcoder1");
+        user1 = provider.create(user1);
+
+        Map<String, Object> props = new HashMap<>();
+        props.put("active", false);
+
+        PatchOperation patchOperation = new PatchOperation();
+        patchOperation.setOperation(PatchOperation.Type.REPLACE);
+        patchOperation.setValue(props);
+
+        UpdateRequest<ScimUser> updateRequest = mock(UpdateRequest.class);
+        when(updateRequest.getId()).thenReturn(user1.getId());
+        when(updateRequest.getOriginal()).thenReturn(user1);
+        when(updateRequest.getPatchOperations()).thenReturn(Collections.singletonList(patchOperation));
+
+        ScimUser result = provider.update(updateRequest);
+
+        assertThat(result.getActive(), is(false));
     }
 }

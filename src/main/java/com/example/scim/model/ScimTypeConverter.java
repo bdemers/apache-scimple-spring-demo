@@ -70,7 +70,7 @@ public final class ScimTypeConverter {
         ScimUser user = new ScimUser();
         user.setId(person.getUsername());
         user.setUserName(person.getUsername());
-        user.setActive(true);
+        user.setActive(person.isActive());
 
         String formatted = person.getLastName() + ", " + person.getFirstName();
         Name name = new Name();
@@ -103,7 +103,8 @@ public final class ScimTypeConverter {
         }
 
         ExamplePerson person = new ExamplePerson()
-                .setUsername(user.getUserName());
+                .setUsername(user.getUserName())
+                .setActive(user.getActive() != null && user.getActive());
 
         if (user.getName() != null) {
             Name name = user.getName();
