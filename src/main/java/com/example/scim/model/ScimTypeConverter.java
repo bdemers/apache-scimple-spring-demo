@@ -160,14 +160,8 @@ public final class ScimTypeConverter {
                 .setId(group.getId())
                 .setDescription(group.getDisplayName());
         if (group.getMembers() != null) {
-
-            System.out.println(group.getMembers());
-
             exampleGroup.setMemberIds( group.getMembers().stream()
-                    .map(wtf -> {
-                        System.out.println(wtf.getValue());
-                        return wtf.getValue();
-                    })
+                    .map(ResourceReference::getValue)
                     .collect(Collectors.toList()));
         }
         return exampleGroup;
