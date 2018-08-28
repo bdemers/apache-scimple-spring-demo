@@ -22,6 +22,7 @@ package com.example.scim.scimple;
 import com.example.scim.model.ExampleGroup;
 import com.example.scim.model.ScimTypeConverter;
 import org.apache.directory.scim.server.exception.UnableToCreateResourceException;
+import org.apache.directory.scim.server.exception.UnableToUpdateResourceException;
 import org.apache.directory.scim.server.provider.Provider;
 import org.apache.directory.scim.server.provider.UpdateRequest;
 import org.apache.directory.scim.spec.protocol.filter.FilterResponse;
@@ -62,9 +63,15 @@ public class ScimGroupProvider implements Provider<ScimGroup> {
   }
 
   @Override
-  public ScimGroup update(UpdateRequest<ScimGroup> updateRequest) {
+  public ScimGroup update(UpdateRequest<ScimGroup> updateRequest) throws UnableToUpdateResourceException {
+
     String id = updateRequest.getId();
-    ScimGroup group = updateRequest.getResource();
+    ScimGroup group = SimplePatchUtil.resourceFromUpdateRequest(updateRequest, ScimGroup.class);
+
+    // remove the old object if the id has changed
+    if (!id.equals(updateRequest.getId())) {
+        groups.remove(id);
+    }
     groups.put(id, ScimTypeConverter.fromScim(group));
     return group;
   }
