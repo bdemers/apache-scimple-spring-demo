@@ -5,6 +5,7 @@ import org.apache.directory.scim.spec.resources.Email;
 import org.apache.directory.scim.spec.resources.Name;
 import org.apache.directory.scim.spec.resources.ScimGroup;
 import org.apache.directory.scim.spec.resources.ScimUser;
+import org.apache.directory.scim.spec.schema.ResourceReference;
 import org.springframework.util.StringUtils;
 
 import java.util.stream.Collectors;
@@ -135,6 +136,17 @@ public final class ScimTypeConverter {
         ScimGroup group = new ScimGroup();
         group.setId(exampleGroup.getId());
         group.setDisplayName(exampleGroup.getDescription());
+
+        if (exampleGroup.getMemberIds() != null) {
+            group.setMembers(exampleGroup.getMemberIds().stream()
+                    .map(id -> {
+                        ResourceReference ref = new ResourceReference();
+                        ref.setValue(id);
+                        return ref;
+                    })
+                    .collect(Collectors.toList()));
+        }
+
         return group;
     }
 
@@ -144,8 +156,20 @@ public final class ScimTypeConverter {
             return null;
         }
 
-        return new ExampleGroup()
+        ExampleGroup exampleGroup = new ExampleGroup()
                 .setId(group.getId())
                 .setDescription(group.getDisplayName());
+        if (group.getMembers() != null) {
+
+            System.out.println(group.getMembers());
+
+            exampleGroup.setMemberIds( group.getMembers().stream()
+                    .map(wtf -> {
+                        System.out.println(wtf.getValue());
+                        return wtf.getValue();
+                    })
+                    .collect(Collectors.toList()));
+        }
+        return exampleGroup;
     }
 }
